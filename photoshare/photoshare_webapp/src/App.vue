@@ -1,57 +1,50 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+    <v-app-bar app color="white" height="125">
+      <v-col>
+        <v-row>
+          <div class="d-flex align-center">
+            <h1>PhotoShare</h1>
+            <div class="ml-5">
+              <v-text-field
+                clearable
+                flat
+                solo-inverted
+                hide-details
+                label="Search"
+                dense
+              ></v-text-field>
+            </div>
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+            <v-btn color="grey" class="ml-3">Login</v-btn>
+            <v-btn color="grey" class="ml-3">Log out</v-btn>
+            <v-btn color="grey" class="ml-3">My Photos</v-btn>
+            <v-btn color="grey" class="ml-3">Submit Photo</v-btn>
+          </div>
+        </v-row>
+        <v-row class="mt-2">
+          <v-btn color="blue lighten-2" small>Wallpapers</v-btn>
+          <v-btn color="deep-purple lighten-3" class="ml-3" small>Nature</v-btn>
+          <v-btn color="indigo accent-1" class="ml-3" small>People</v-btn>
+          <v-btn color="cyan lighten-5" class="ml-3" small>Architecture</v-btn>
+          <v-btn color="green" class="ml-3" small>Fasion</v-btn>
+          <v-btn color="orange lighten-2" class="ml-3" small>Film</v-btn>
+        </v-row>
+      </v-col>
     </v-app-bar>
 
     <v-main>
-      <HelloWorld/>
+      <photo-grid></photo-grid>  
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
-
+import PhotoGrid from '@/components/PhotoGrid'
 export default {
   name: 'App',
 
-  components: {
-    HelloWorld,
-  },
+  components: {PhotoGrid},
 
   data: () => ({
     //
