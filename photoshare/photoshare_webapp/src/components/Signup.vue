@@ -35,10 +35,10 @@
                 required
               ></v-text-field>
               <v-card-actions>
-                <v-btn primary small @click="$store.state.signup = false"
+                <v-btn primary small @click="closeWindow"
                   >Close</v-btn
                 >
-                <v-btn primary small :disabled="!isValidForm">Sign Up</v-btn>
+                <v-btn primary small :disabled="!isValidForm" @click="submitSignUp">Sign Up</v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
@@ -66,7 +66,19 @@ export default {
   }),
 
   methods: {
-
+    closeWindow(){
+      this.$store.state.signup = false;
+    },
+    submitSignUp(){
+      this.$store.dispatch('signUp', {
+        username: this.username,
+        password: this.password2
+      }).then(()=>{
+        this.closeWindow();
+      }).catch(()=>{
+        //
+      });
+    }
   },
 };
 </script>

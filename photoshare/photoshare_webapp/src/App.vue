@@ -2,8 +2,11 @@
   <v-app>
     <v-app-bar app color="white" height="125">
       <v-col>
+        <v-row> <h4 v-if="$store.state.user.username">Welcome {{$store.state.user.username}}</h4></v-row>
         <v-row>
           <div class="d-flex align-center">
+           
+            <br> 
             <h1>PhotoShare</h1>
             <div class="ml-5">
               <v-text-field
@@ -18,9 +21,10 @@
             </div>
             <v-btn color="blue" class="ml-3" @click="searchPhotos()">Search</v-btn>
             <v-btn color="grey" class="ml-3" @click="$store.state.login=true">Login</v-btn>
-            <v-btn color="grey" class="ml-3" >Log out</v-btn>
+            <v-btn color="grey" class="ml-3" @click="$store.dispatch('logout')">Log out</v-btn>
             <v-btn color="grey" class="ml-3" >My Photos</v-btn>
             <v-btn color="grey" class="ml-3" @click="$store.state.submitPhotoForm=true">Submit Photo</v-btn>
+
           </div>
         </v-row>
         <v-row class="mt-2">
