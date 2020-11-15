@@ -32,7 +32,5 @@ export class AuthService {
     return {accessToken};
   }
 
-  async usernameExists(username: string): Promise<boolean>{
-    return this.userRepository.usernameExists(username);
-  }
+ 
 }

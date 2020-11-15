@@ -1,8 +1,8 @@
-import { AuthController } from './auth.controller';
+
 import { ConflictException, InternalServerErrorException } from "@nestjs/common";
 import { EntityRepository, Repository } from "typeorm";
 import { AuthCredentialsDto } from "./dto/auth-credentials.dto";
-import { User } from "./user.entity";
+import { User } from "../users/user.entity";
 import * as bcrypt from 'bcrypt';
 
 @EntityRepository(User)
@@ -28,7 +28,7 @@ export class UserRepository extends Repository<User>{
   }
 
   async usernameExists(username: string): Promise<boolean>{
-    if (this.findOne({ username })) {
+    if (await this.findOne({ username })) {
       return true;
     }
 

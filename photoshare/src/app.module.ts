@@ -7,13 +7,15 @@ import { join } from 'path';
 
 import { AuthModule } from './auth/auth.module';
 import { typeormconfig } from './config/typeorgm.config';
+import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeormconfig),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'photoshare_webapp/dist')
     }),
-    AuthModule
+    AuthModule,
+    UsersModule
   ],
   controllers: [AppController],
   providers: [AppService],
