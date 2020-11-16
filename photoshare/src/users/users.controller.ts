@@ -1,5 +1,5 @@
 import { UsersService } from './users.service';
-import { Controller, Get, Param, Post, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Param, Post, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express/multer/interceptors/files.interceptor';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -14,11 +14,11 @@ export class UsersController {
   }
 
 
-  @Post('/submitPhotos')
+  @Post('/submitPhotos/')
   @UseGuards(AuthGuard())
   @UseInterceptors(FilesInterceptor('images'))
-  async submitPhotos(@UploadedFiles() images): Promise<Array<string>>{
-    return await this.userService.submitPhotos(images);
+  async submitPhotos(@UploadedFiles() images, @Req() req): Promise<Array<string>>{
+    return await this.userService.submitPhotos(images, req.user.username);
   }
 
 }

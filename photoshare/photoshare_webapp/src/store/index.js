@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 
-
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -25,10 +24,10 @@ export default new Vuex.Store({
       state.user.username = userData.username;
       state.user.accessToken = userData.accessToken;
     },
-    logout(state){
+    logout(state) {
       state.login = state.signup = false;
       state.user.username = state.user.accessToken = null;
-    }
+    },
   },
   actions: {
     loadPhotoSearch({ commit }, searchTerm) {
@@ -52,7 +51,6 @@ export default new Vuex.Store({
               accessToken: r.data.accessToken,
             });
             resolve();
-            console.log(r);
           })
           .catch(err => {
             console.log(err);
@@ -66,11 +64,13 @@ export default new Vuex.Store({
         axios
           .post(state.baseApiUrl + 'auth/signup', signUpData)
           .then(() => {
-            dispatch('login', signUpData).then(() => {
-              resolve();
-            }).catch(() => {
-              reject();
-            });
+            dispatch('login', signUpData)
+              .then(() => {
+                resolve();
+              })
+              .catch(() => {
+                reject();
+              });
           })
           .catch(err => {
             console.log(err);
@@ -79,9 +79,28 @@ export default new Vuex.Store({
           });
       });
     },
-    logout({commit}){
+    logout({ commit }) {
       commit('logout');
-    }
+    },
+    async submitPhotos({ state }, files) {
+      return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        files.forEach(f => {
+          formData.append('images', f);
+        });
+
+        axios.post(state.baseApiUrl + 'users/submitPhotos', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${state.user.accessToken}`,
+          },
+        }).then(r => {
+          resolve(r);
+        }).catch(e => {
+          reject(e);
+        })
+      });
+    },
   },
   modules: {},
 });

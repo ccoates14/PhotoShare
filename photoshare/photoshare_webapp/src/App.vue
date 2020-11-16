@@ -20,8 +20,8 @@
               ></v-text-field>
             </div>
             <v-btn color="blue" class="ml-3" @click="searchPhotos()">Search</v-btn>
-            <v-btn color="grey" class="ml-3" @click="$store.state.login=true">Login</v-btn>
-            <v-btn color="grey" class="ml-3" @click="$store.dispatch('logout')">Log out</v-btn>
+            <v-btn color="grey" class="ml-3" :disabled="($store.state.user.accessToken)" @click="$store.state.login=true">Login</v-btn>
+            <v-btn color="grey" class="ml-3" :disabled="!($store.state.user.accessToken)" @click="$store.dispatch('logout')">Log out</v-btn>
             <v-btn color="grey" class="ml-3" :disabled="!($store.state.user.accessToken)">My Photos</v-btn>
             <v-btn color="grey" class="ml-3" :disabled="!($store.state.user.accessToken)" @click="$store.state.submitPhotoForm=true">Submit Photo</v-btn>
 
@@ -64,7 +64,9 @@ export default {
   methods:{
     searchPhotos(){
       this.$store.dispatch('loadPhotoSearch', this.searchTerm);
-    }
-  }
+    },
+  
+  },
+
 };
 </script>
