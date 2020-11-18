@@ -10,5 +10,6 @@ export const typeormconfig: TypeOrmModule = {
   password: 'ZedZed1234!$',
   database: 'photos',
   entities: [User, Photo],
-  synchronize: true
+  synchronize: true,
+  logging: true
 }

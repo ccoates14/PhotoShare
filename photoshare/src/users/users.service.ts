@@ -1,9 +1,9 @@
-
 import { PhotosService } from './../photos/photos.service';
 import { PhotoDto } from './../photos/dto/photo.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from 'src/users/user.repository';
+
 const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
@@ -35,7 +35,6 @@ export class UsersService {
       throw Error('No images!');
     }
 
-
     try {
       urlsToImageFile = await this.uploadImagesToCloudinary(images);
       const databaseSubmit = [];
@@ -60,7 +59,47 @@ export class UsersService {
       throw err;
     }
 
+    this.insertPhotosTags(urls, username);
+
     return urls;
+  }
+
+  private async insertPhotosTags(urls, username) {
+    const request = require('request'),
+      apiKey = 'acc_6b4f35f52ec332c', //THESE COULD ALWAYS BE INJECTED THROUGH ENV VARS LATER
+      apiSecret = '3a9877ccf6516ce142181da7b0d54f9a',
+      me = this;
+
+    function getAndInsertPhotoTags() {
+      if (urls.length) {
+        let currentUrl = null;
+        request
+          .get(
+            'https://api.imagga.com/v2/tags?image_url=' +
+              encodeURIComponent((currentUrl = urls.pop())),
+            function(_, __, body) {
+              const url = currentUrl;
+              let tags = JSON.parse(body);
+              try {
+                tags = tags['result']['tags'];
+                me.photosService.addPhotoTags(
+                  tags.slice(0, 3).map(t => t['tag']['en']),
+                  url,
+                  username,
+                );
+              } catch (err) {
+                console.log(tags);
+                console.log(err);
+              } finally {
+                getAndInsertPhotoTags();
+              }
+            },
+          )
+          .auth(apiKey, apiSecret, true);
+      }
+    }
+
+    getAndInsertPhotoTags();
   }
 
   private async uploadImagesToCloudinary(images: any): Promise<any> {

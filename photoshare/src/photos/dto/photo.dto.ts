@@ -8,6 +8,8 @@ export class PhotoDto{
 
   timeStamp: Date;
 
+  tags: Array<string>;
+
   constructor() {
     this.timeStamp = new Date();
   }

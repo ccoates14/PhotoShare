@@ -1,3 +1,4 @@
+import { QueryDto } from './dto/query.dto';
 import { PhotosRepository } from './photos.repository';
 import { Injectable } from '@nestjs/common';
 import { PhotoDto } from './dto/photo.dto';
@@ -14,4 +15,15 @@ export class PhotosService {
     return this.photoRepository.submitPhoto(photoDto);
   }
 
+  async getUsersPhotos(username: string): Promise<Array<string>>{
+    return this.photoRepository.getUsersPhotos(username);
+  }
+
+  async addPhotoTags(tags: Array<string>, url: string, username: string) {
+    this.photoRepository.addPhotoTags(tags, url, username);
+  }
+
+  async queryPhotos(query: QueryDto): Promise<Array<string>>{
+    return this.photoRepository.queryPhotos(query);
+  }
 }

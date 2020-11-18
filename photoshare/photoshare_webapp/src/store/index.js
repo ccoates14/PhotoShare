@@ -11,6 +11,7 @@ export default new Vuex.Store({
     login: false,
     signup: false,
     baseApiUrl: 'http://localhost:3000/api/',
+    currentSearchTerm: null,
     user: {
       username: null,
       accessToken: null,
@@ -30,16 +31,27 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    loadPhotoSearch({ commit }, searchTerm) {
+    loadPhotoSearch({ commit, state }, searchTerm) {
       //this will be updated later to make an actual api call
-      searchTerm;
+      state.currentSearchTerm = searchTerm;
       let photos = [];
+      let limit = 20;
+      let offset = 0; 
 
-      for (let i = 0; i < 10; i++) {
+      axios.get(state.baseApiUrl + 'photos/?limit=' + limit + '&offset=' + offset + '&query=' + searchTerm).then(r => {
+        console.log(r);
+        r.data.forEach(i => {
+          photos.push(i);
+          commit('updateCurrentPhotoGrid', photos);
+        });
+      }).catch(err => {
+        console.log(err);
+      });
+
+     /* for (let i = 0; i < 10; i++) {
         photos.push('https://source.unsplash.com/random');
-      }
+      }*/
 
-      commit('updateCurrentPhotoGrid', photos);
     },
     login({ commit, state }, loginData) {
       return new Promise((resolve, reject) => {
@@ -82,6 +94,18 @@ export default new Vuex.Store({
     logout({ commit }) {
       commit('logout');
     },
+    async searchUsersPhotos({state}){
+      const username = state.user.username;
+
+      if (username){
+        axios.get(state.baseApiUrl + 'photos/username/' + username).then(r => {
+          state.currentPhotoGrid = r.data;
+        }).catch(err => {
+          console.log(err);
+        });
+      }
+    },
+
     async submitPhotos({ state }, files) {
       return new Promise((resolve, reject) => {
         const formData = new FormData();

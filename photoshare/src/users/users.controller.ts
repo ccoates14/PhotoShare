@@ -13,12 +13,12 @@ export class UsersController {
     return this.userService.usernameExists(username);
   }
 
-
   @Post('/submitPhotos/')
   @UseGuards(AuthGuard())
   @UseInterceptors(FilesInterceptor('images'))
   async submitPhotos(@UploadedFiles() images, @Req() req): Promise<Array<string>>{
     return await this.userService.submitPhotos(images, req.user.username);
   }
+
 
 }

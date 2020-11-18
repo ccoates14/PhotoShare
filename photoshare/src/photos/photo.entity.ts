@@ -18,5 +18,8 @@ export class Photo extends BaseEntity{
 
   @Column()
   timeStamp: Date;
+
+  @Column("text", { array: true , nullable: true})
+  searchStrings: Array<string>;
   
 } 
