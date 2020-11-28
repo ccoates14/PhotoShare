@@ -41,7 +41,7 @@ export default new Vuex.Store({
         state.currentSearchTerm = searchTerm;
       }
 
-      if (searchTerm == 'loadAll') {
+      if (state.currentSearchTerm == 'loadAll') {
         dispatch(state.currentSearchTerm);
         return;
       }
@@ -55,8 +55,6 @@ export default new Vuex.Store({
         r.data.forEach(i => {
           photos.push(i);
         });
-
-        console.log(photos);
 
         if ((photos.length == 0 && searchTerm != state.searchTerm) || photos.length > 0){
           commit('updateCurrentPhotoGrid', photos);

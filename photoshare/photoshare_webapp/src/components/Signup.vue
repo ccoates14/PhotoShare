@@ -15,6 +15,7 @@
                 required
                 :rules="usernameRules"
                 v-model="username"
+                v-click-outside="checkUserNameTaken"
               ></v-text-field>
               <v-text-field
                 class="ml-2"
@@ -48,6 +49,7 @@
   </v-dialog>
 </template>
 <script>
+import axios from 'axios';
 export default {
   data: () => ({
     username: '',
@@ -66,6 +68,21 @@ export default {
   }),
 
   methods: {
+    checkUserNameTaken(){
+      if (this.username){
+        //check if username is taken
+        axios.get(this.$store.state.baseApiUrl + 'users/userExists/' + this.username).then(r =>{
+          const usernameTaken = r.data;
+
+          if (usernameTaken){
+            alert(this.username + ' taken!');
+            this.username = '';
+          }
+        }).catch(err =>{
+          console.log(err);
+        });
+      }
+    },
     closeWindow(){
       this.$store.state.signup = false;
     },

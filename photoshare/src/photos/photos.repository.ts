@@ -62,7 +62,7 @@ export class PhotosRepository extends Repository<Photo>{
 
   async getAllPhotos(offset: number, limit: number): Promise<Array<string>>{
     let photos = await this.find({
-      skip: offset,
+      skip: offset ,
       take: limit
     });
     let photoUrls = [];
