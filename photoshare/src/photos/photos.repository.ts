@@ -59,4 +59,18 @@ export class PhotosRepository extends Repository<Photo>{
     return urls;
 
   }
+
+  async getAllPhotos(offset: number, limit: number): Promise<Array<string>>{
+    let photos = await this.find({
+      skip: offset,
+      take: limit
+    });
+    let photoUrls = [];
+
+    photos.forEach(p => {
+      photoUrls.push(p.url);
+    });
+
+    return photoUrls;
+  }
 }

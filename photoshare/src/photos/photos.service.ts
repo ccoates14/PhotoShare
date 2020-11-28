@@ -1,3 +1,4 @@
+import { Photo } from './photo.entity';
 import { QueryDto } from './dto/query.dto';
 import { PhotosRepository } from './photos.repository';
 import { Injectable } from '@nestjs/common';
@@ -25,5 +26,9 @@ export class PhotosService {
 
   async queryPhotos(query: QueryDto): Promise<Array<string>>{
     return this.photoRepository.queryPhotos(query);
+  }
+
+  async getAllPhotos(offset: number, limit: number): Promise<Array<string>>{
+    return this.photoRepository.getAllPhotos(offset, limit);
   }
 }

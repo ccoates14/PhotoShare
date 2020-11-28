@@ -16,6 +16,7 @@ export default new Vuex.Store({
       username: null,
       accessToken: null,
     },
+    imageLoadingLimit: 10
   },
   mutations: {
     updateCurrentPhotoGrid(state, newPhotoGrid) {
@@ -31,19 +32,35 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    loadPhotoSearch({ commit, state }, searchTerm) {
-      //this will be updated later to make an actual api call
-      state.currentSearchTerm = searchTerm;
+    loadPhotoSearch({ commit, dispatch, state }, searchTerm) {
+      if (searchTerm){
+        if (searchTerm != state.currentSearchTerm){
+          state.currentPhotoGrid = [];
+        }
+
+        state.currentSearchTerm = searchTerm;
+      }
+
+      if (searchTerm == 'loadAll') {
+        dispatch(state.currentSearchTerm);
+        return;
+      }
+
       let photos = [];
-      let limit = 20;
-      let offset = 0; 
+      let limit = state.imageLoadingLimit;
+      let offset = state.currentPhotoGrid.length;
 
       axios.get(state.baseApiUrl + 'photos/?limit=' + limit + '&offset=' + offset + '&query=' + searchTerm).then(r => {
         console.log(r);
         r.data.forEach(i => {
           photos.push(i);
-          commit('updateCurrentPhotoGrid', photos);
         });
+
+        console.log(photos);
+
+        if ((photos.length == 0 && searchTerm != state.searchTerm) || photos.length > 0){
+          commit('updateCurrentPhotoGrid', photos);
+        }
       }).catch(err => {
         console.log(err);
       });
@@ -100,6 +117,26 @@ export default new Vuex.Store({
           console.log(err);
         });
       }
+    },
+
+    async loadAll({state}){
+      state.currentSearchTerm = 'loadAll';
+      const offset = state.currentPhotoGrid.length;
+      const limit = state.imageLoadingLimit;
+
+      return new Promise((resolve, reject) => {
+        axios.get(state.baseApiUrl + 'photos/all/' + offset + "/" + limit).then(r => {
+      
+          r.data.forEach(l => {
+            state.currentPhotoGrid.push(l);
+          });
+
+          resolve();
+        }).catch(err => {
+          console.log(err);
+          reject();
+        });
+      });
     },
 
     async submitPhotos({ state }, files) {

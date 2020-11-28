@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app v-scroll="scroll">
     <v-app-bar app color="white" height="125">
       <v-col>
         <v-row> <h4 v-if="$store.state.user.username">Welcome {{$store.state.user.username}}</h4></v-row>
@@ -7,7 +7,7 @@
           <div class="d-flex align-center">
            
             <br> 
-            <h1>PhotoShare</h1>
+            <h1 @click="searchPhotos('loadAll')">PhotoShare</h1>
             <div class="ml-5">
               <v-text-field
                 clearable
@@ -19,7 +19,7 @@
                 v-model="searchTerm"
               ></v-text-field>
             </div>
-            <v-btn color="blue" class="ml-3" @click="searchPhotos()">Search</v-btn>
+            <v-btn color="blue" class="ml-3" @click="!(searchTerm) ? searchPhotos('loadAll') : searchPhotos()">Search</v-btn>
             <v-btn color="grey" class="ml-3" :disabled="($store.state.user.accessToken)" @click="$store.state.login=true">Login</v-btn>
             <v-btn color="grey" class="ml-3" :disabled="!($store.state.user.accessToken)" @click="$store.dispatch('logout')">Log out</v-btn>
             <v-btn color="grey" class="ml-3" :disabled="!($store.state.user.accessToken)" @click="$store.dispatch('searchUsersPhotos')">My Photos</v-btn>
@@ -61,12 +61,49 @@ export default {
   data: () => ({
     searchTerm: ''
   }),
-  methods:{
-    searchPhotos(){
-      this.$store.dispatch('loadPhotoSearch', this.searchTerm);
-    },
-  
+  computed: {
+    
   },
+  methods:{
+    searchPhotos(search=null){
+      this.$store.dispatch('loadPhotoSearch', search == null ? this.searchTerm : search);
+    },
+     getDocHeight() {
+      var D = document;
+      return Math.max(
+        D.body.scrollHeight,
+        D.documentElement.scrollHeight,
+        D.body.offsetHeight,
+        D.documentElement.offsetHeight,
+        D.body.clientHeight,
+        D.documentElement.clientHeight
+      );
+    },
+    amountScrolled() {
+      var winheight =
+        window.innerHeight ||
+        (document.documentElement || document.body).clientHeight;
+      var docheight = this.getDocHeight();
+      var scrollTop =
+        window.pageYOffset ||
+        (document.documentElement || document.body.parentNode || document.body)
+          .scrollTop;
+      var trackLength = docheight - winheight;
+      var pctScrolled = Math.floor((scrollTop / trackLength) * 100); // gets percentage scrolled (ie: 80 or NaN if tracklength == 0)
+      return pctScrolled;
+    },
+    scroll(){
+  
+      const percentageScrolledBeforeLoad = 65;
+      if (this.amountScrolled() > percentageScrolledBeforeLoad){
+        this.$store.dispatch('loadPhotoSearch');
+      }
+    },
+   
+  },
+  created(){
+    this.$store.dispatch('loadAll');
+  }
 
 };
 </script>
