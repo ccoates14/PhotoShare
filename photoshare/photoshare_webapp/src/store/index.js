@@ -48,10 +48,6 @@ export default new Vuex.Store({
         console.log(err);
       });
 
-     /* for (let i = 0; i < 10; i++) {
-        photos.push('https://source.unsplash.com/random');
-      }*/
-
     },
     login({ commit, state }, loginData) {
       return new Promise((resolve, reject) => {
